@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>IoT Basic WebControl</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-switch.css" rel="stylesheet">
+
+    
+    <!-- Custom CSS -->
+    <style>
+    body {
+        padding-top: 70px;
+        /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    }
+    </style>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+
+                <a class="navbar-brand" href="#">IoT Basic Web Control</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 text-center">
+                <form action="" method="POST" role="form">
+                    <legend>LED Control</legend>
+                
+                    <div class="form-group">
+                        <label for="">URL ("{url}/led0/on , {url}/led0/off , {url}/led1/on} , {url}/led1/off")</label>
+                        <input type="text" name="url" id="url" class="form-control" value="http://192.168.4.1">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="">LED0</label>
+                        <input type="checkbox" name="my-checkbox-1" id="led0" checked>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="">LED1</label>
+                        <input type="checkbox" name="my-checkbox-2" id="led1" checked>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 text-center">
+                <form action="" method="POST" role="form">
+                    <legend>Temperature & Humidity</legend>
+                
+                    <div class="form-group">
+                        <label for="">Temperature</label>
+                        <input type="text" name="temperature" id="temperature" class="form-control" value="" required="required" pattern="" title="">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="">Humidity</label>
+                        <input type="text" name="humidity" id="humidity" class="form-control" value="" required="required" pattern="" title="">
+                    </div>
+                </form>
+
+            </div>
+        </div>
+        <!-- /.row -->
+
+    </div>
+    <!-- /.container -->
+    
+
+    <!-- jQuery Version 1.21.1 -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-switch.js"></script>
+
+     <script type="text/javascript">
+    
+        $("#led0").bootstrapSwitch();
+        $("#led1").bootstrapSwitch();
+
+        $('#led0').on('switchChange.bootstrapSwitch', function(event, state) {
+          //console.log(this); // DOM element
+          //console.log(event); // jQuery event
+          //console.log(state); // true | false
+          var action = "";
+          if (state)
+          {
+            action="on"
+          }
+          else
+          {
+            action="off"
+          }
+
+
+          $.get($('#url').val()  + "/led0/" + action  ,function(data){
+            console.log(data);
+          });
+        });
+
+        $('#led1').on('switchChange.bootstrapSwitch', function(event, state) {
+          //console.log(this); // DOM element
+          //console.log(event); // jQuery event
+          //console.log(state); // true | false
+          var action = "";
+          if (state)
+          {
+            action="on"
+          }
+          else
+          {
+            action="off"
+          }
+
+
+          $.get($('#url').val() + "/led1/" + action  ,function(data){
+            console.log(data);
+          });
+        });
+
+        function getTemp()
+        {
+            $.get($('#url').val() + "/temperature"  ,function(data){
+                $('#temperature').val(data);
+            });
+
+            $.get($('#url').val() + "/humidity"  ,function(data){
+                $('#humidity').val(data);
+            });
+        }
+
+        setInterval(getTemp,5000);
+    </script>
+
+</body>
+
+</html>
